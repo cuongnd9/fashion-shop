@@ -23,13 +23,7 @@ html(lang='en')
     // ===============================================================================================
     link(rel='stylesheet', type='text/css', href='vendor/animsition/css/animsition.min.css')
     // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='vendor/select2/select2.min.css')
-    // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='vendor/daterangepicker/daterangepicker.css')
-    // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='vendor/slick/slick.css')
-    // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='vendor/lightbox2/css/lightbox.min.css')
+    block head
     // ===============================================================================================
     link(rel='stylesheet', type='text/css', href='css/util.css')
     link(rel='stylesheet', type='text/css', href='css/main.css')
@@ -65,17 +59,10 @@ html(lang='en')
               ul.main_menu
                 li
                   a(href='/') Home
-                  ul.sub_menu
-                    li
-                      a(href='/') Homepage V1
-                    li
-                      a(href='home-02.html') Homepage V2
-                    li
-                      a(href='home-03.html') Homepage V3
                 li
-                  a(href='product.html') Shop
+                  a(href='/products') Shop
                 li.sale-noti
-                  a(href='product.html') Sale
+                  a(href='/products') Sale
                 li
                   a(href='cart.html') Features
                 li
@@ -196,7 +183,7 @@ html(lang='en')
             li.item-topbar-mobile.p-l-20.p-t-8.p-b-8
               .topbar-child2-mobile
                 span.topbar-email
-                  | fashe@example.com
+                  | info@tingfashion.com
                 .topbar-language.rs1-select2
                   select.selection-1(name='time')
                     option USD
@@ -330,41 +317,6 @@ html(lang='en')
         i.fa.fa-angle-double-up(aria-hidden='true')
     // Container Selection1
     #dropDownSelect1
-    // ===============================================================================================
-    script(type='text/javascript', src='vendor/jquery/jquery-3.2.1.min.js')
-    // ===============================================================================================
-    script(type='text/javascript', src='vendor/animsition/js/animsition.min.js')
-    // ===============================================================================================
-    script(type='text/javascript', src='vendor/bootstrap/js/popper.js')
-    script(type='text/javascript', src='vendor/bootstrap/js/bootstrap.min.js')
-    // ===============================================================================================
-    script(type='text/javascript', src='vendor/select2/select2.min.js')
-    script(type='text/javascript').
-      $(".selection-1").select2({
-      minimumResultsForSearch: 20,
-      dropdownParent: $('#dropDownSelect1')
-      });
-    // ===============================================================================================
-    script(type='text/javascript', src='vendor/slick/slick.min.js')
-    script(type='text/javascript', src='js/slick-custom.js')
-    // ===============================================================================================
-    script(type='text/javascript', src='vendor/countdowntime/countdowntime.js')
-    // ===============================================================================================
-    script(type='text/javascript', src='vendor/lightbox2/js/lightbox.min.js')
-    // ===============================================================================================
-    script(type='text/javascript', src='vendor/sweetalert/sweetalert.min.js')
-    script(type='text/javascript').
-      $('.block2-btn-addcart').each(function(){
-      var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
-      $(this).on('click', function(){
-      swal(nameProduct, "is added to cart !", "success");
-      });
-      });
-      $('.block2-btn-addwishlist').each(function(){
-      var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
-      $(this).on('click', function(){
-      swal(nameProduct, "is added to wishlist !", "success");
-      });
-      });
-    // ===============================================================================================
-    script(src='js/main.js')
+      // Container Selection2
+    #dropDownSelect2
+    block script
