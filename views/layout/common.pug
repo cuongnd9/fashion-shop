@@ -1,7 +1,7 @@
 doctype html
 html(lang='en')
   head
-    title Home
+    block title
     meta(charset='UTF-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     // ===============================================================================================
@@ -64,13 +64,13 @@ html(lang='en')
                 li.sale-noti
                   a(href='/products') Sale
                 li
-                  a(href='cart.html') Features
+                  a(href='/cart') Features
                 li
-                  a(href='blog.html') Blog
+                  a(href='/blog') Blog
                 li
-                  a(href='about.html') About
+                  a(href='/about') About
                 li
-                  a(href='contact.html') Contact
+                  a(href='/contact') Contact
           // Header Icon
           .header-icons
             a.header-wrapicon1.dis-block(href='#')
@@ -111,7 +111,7 @@ html(lang='en')
                 .header-cart-buttons
                   .header-cart-wrapbtn
                     // Button
-                    a.flex-c-m.size1.bg1.bo-rad-20.hov1.s-text1.trans-0-4(href='cart.html')
+                    a.flex-c-m.size1.bg1.bo-rad-20.hov1.s-text1.trans-0-4(href='/cart')
                       | View Cart
                   .header-cart-wrapbtn
                     // Button

@@ -5,6 +5,9 @@ const pug = require('pug')
 const mongoose = require('mongoose')
 
 const productRoute = require('./routes/product.route')
+const cartRoute = require('./routes/cart.route')
+const aboutRoute = require('./routes/about.route')
+const contactRoute = require('./routes/contact.route')
 
 const port = process.env.PORT || 8000
 
@@ -22,5 +25,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/products', productRoute)
+app.use('/cart', cartRoute)
+app.use('/about', aboutRoute)
+app.use('/contact', contactRoute)
 
 app.listen(port, () => console.log(`App is listening on ${port}`))
