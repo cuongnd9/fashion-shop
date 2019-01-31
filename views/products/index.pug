@@ -126,9 +126,15 @@ block content
 										span.block2-price.m-text6.p-r-5
 											| $#{product.price}
 					// Pagination
+					mixin itemPagination(page)
+						if (page == activePage)
+							a.item-pagination.flex-c-m.trans-0-4.active-pagination(href='/products?page=' + page)= page
+						else
+							a.item-pagination.flex-c-m.trans-0-4(href='/products?page=' + page)= page
 					.pagination.flex-m.flex-w.p-t-26
-						a.item-pagination.flex-c-m.trans-0-4.active-pagination(href='#') 1
-						a.item-pagination.flex-c-m.trans-0-4(href='#') 2
+						+itemPagination(pages[0])
+						+itemPagination(pages[1])
+						+itemPagination(pages[2])
 block script
 	// ===============================================================================================
 	script(type='text/javascript', src='vendor/jquery/jquery-3.2.1.min.js')

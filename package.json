@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --inspect=9123 index.js"
+    "start": "nodemon --inspect index.js"
   },
   "author": "",
   "license": "ISC",
