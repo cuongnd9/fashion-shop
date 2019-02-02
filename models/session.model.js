@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const sessionSchema = new Schema({
 	cart: [{
 		productId: String,
-		count: Number
+		quantity: Number
 	}]
 })
 
