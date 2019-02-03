@@ -75,9 +75,8 @@ block content
 						.rs2-select2.rs3-select2.rs4-select2.bo4.of-hidden.w-size21.m-t-8.m-b-12
 							select.selection-2(name='country')
 								option Select a country...
-								option US
-								option UK
-								option Japan
+								each country in countries
+									option= country.countryName
 						.size13.bo4.m-b-12
 							input.sizefull.s-text7.p-l-15.p-r-15(type='text', name='state', placeholder='State /  country')
 						.size13.bo4.m-b-22
