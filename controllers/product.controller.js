@@ -36,9 +36,6 @@ module.exports.index = async (req, res) => {
 	res.render('products/index', { 
 		products: products.slice(start, end),
 		activePage: page,
-		pages: pages,
-		isAddedToCart: app.get('isAddedToCart'),
-		selectedProduct: app.get('selectedProduct')
+		pages: pages
 	})
-	app.set('isAddedToCart', false)
 }

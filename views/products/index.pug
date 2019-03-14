@@ -13,7 +13,7 @@ block content
 		h2.l-text2.t-center
 			| Women
 		p.m-text13.t-center
-			| New Arrivals Women Collection 2018
+			| New Arrivals Women Collection 2019
 	// Content page
 	section.bgwhite.p-t-55.p-b-65
 		.container
@@ -120,7 +120,7 @@ block content
 												i.icon-wishlist.icon_heart.dis-none(aria-hidden='true')
 											.block2-btn-addcart.w-size1.trans-0-4
 												// Button
-												a.flex-c-m.size1.bg4.bo-rad-23.hov1.s-text1.trans-0-4(href='/cart/add/' + product.id)
+												button.flex-c-m.size1.bg4.bo-rad-23.hov1.s-text1.trans-0-4(onclick=`addToCart(${JSON.stringify(product)})`)
 													| Add to Cart
 									.block2-txt.p-t-20
 										a.block2-name.dis-block.s-text3.p-b-5(href='product-detail.html')
@@ -163,18 +163,16 @@ block script
 	script(type='text/javascript', src='js/slick-custom.js')
 	// ===============================================================================================
 	script(type='text/javascript', src='vendor/sweetalert/sweetalert.min.js')
+	script(type='text/javascript', src='https://unpkg.com/axios/dist/axios.min.js')
 	script(type='text/javascript').
-		function addToCart() {
-		if (#{isAddedToCart}) {
-		swal({
-		title: "#{selectedProduct}",
-		text: "is added to cart !",
-		icon: "success"
-		});
-		}
-		}
+		// Add to cart
+		const addToCart = product => {
+			const { _id: id, name } = product;
+			axios.get(`cart/add/${id}`);
 
-		window.onload = addToCart();
+			swal(name, "is added to cart !", "success");
+			console.log('$$$$$',id, name)
+		};
 
 		$('.block2-btn-addwishlist').each(function(){
 		var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
@@ -182,6 +180,7 @@ block script
 		swal(nameProduct, "is added to wishlist !", "success");
 		});
 		});
+
 	// ===============================================================================================
 	script(type='text/javascript', src='vendor/noui/nouislider.min.js')
 	script(type='text/javascript').

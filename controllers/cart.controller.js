@@ -45,7 +45,5 @@ module.exports.addToCart = async (req, res) => {
 
 	await session.save()
 
-	app.set('isAddedToCart', true)
-	app.set('selectedProduct', product.name)
 	res.redirect('back')
 }

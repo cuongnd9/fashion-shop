@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express')
+const morgan = require('morgan')
 const pug = require('pug')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
@@ -22,6 +23,7 @@ app.set('view engine', 'pug')
 app.set('views', './views')
 
 app.use(express.static('public'))
+app.use(morgan('dev'))
 app.use(cookieParser(process.env.SESSION_SECRET))
 app.use(sessionMiddleware.create)
 
