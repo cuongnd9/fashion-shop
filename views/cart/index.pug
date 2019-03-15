@@ -24,25 +24,25 @@ block content
 								th.column-3 Price
 								th.column-4.p-l-70 Quantity
 								th.column-5 Total
-							- var totalPrice = 0
+							- var subTotal = 0
 							each item in cart
 								tr.table-row(id=`table-row-${JSON.stringify(item.product._id)}`)
+									- subTotal += item.quantity * item.product.price
 									td.column-1
-										button.cart-img-product.b-rad-4.o-f-hidden(onclick=`removeProduct(${JSON.stringify(item.product._id)})`)
+										button.cart-img-product.b-rad-4.o-f-hidden(onclick=`removeProduct(${JSON.stringify(item.product._id)}, ${JSON.stringify(item.product.price)})`)
 											img(src=item.product.image, alt='IMG-PRODUCT')
 									td.column-2= item.product.name
 									td.column-3 $#{item.product.price}
 									td.column-4
 										.flex-w.bo5.of-hidden.w-size17
-											button.btn-num-product-down.color1.flex-c-m.size7.bg8.eff2(onclick=`decreaseQuantity(${JSON.stringify(item.product._id)})`)
+											button.btn-num-product-down.color1.flex-c-m.size7.bg8.eff2(onclick=`decreaseQuantity(${JSON.stringify(item.product._id)}, ${JSON.stringify(item.product.price)})`)
 												i.fs-12.fa.fa-minus(aria-hidden='true')
 											div
 											input.size8.m-text18.t-center.num-product(id=`quantity-${JSON.stringify(item.product._id)}` type='number', name='num-product1', value=item.quantity)
 											div
-											button.btn-num-product-up.color1.flex-c-m.size7.bg8.eff2(onclick=`increaseQuantity(${JSON.stringify(item.product._id)})`)
+											button.btn-num-product-up.color1.flex-c-m.size7.bg8.eff2(onclick=`increaseQuantity(${JSON.stringify(item.product._id)}, ${JSON.stringify(item.product.price)})`)
 												i.fs-12.fa.fa-plus(aria-hidden='true')
-									td.column-5 $#{item.quantity * item.product.price}
-									- totalPrice += item.quantity * item.product.price
+									td.column-5(id=`total-${JSON.stringify(item.product._id)}`) $#{item.quantity * item.product.price}
 			.flex-w.flex-sb-m.p-t-25.p-b-25.bo8.p-l-35.p-r-60.p-lr-15-sm
 				.flex-w.flex-m.w-full-sm
 					.size11.bo4.m-r-10
@@ -63,8 +63,8 @@ block content
 				.flex-w.flex-sb-m.p-b-12
 					span.s-text18.w-size19.w-full-sm
 						| Subtotal:
-					span.m-text21.w-size20.w-full-sm
-						| $#{totalPrice}
+					span#sub-total.m-text21.w-size20.w-full-sm
+						| $#{subTotal}
 				// 
 				.flex-w.flex-sb.bo10.p-t-15.p-b-20
 					span.s-text18.w-size19.w-full-sm
@@ -119,28 +119,59 @@ block script
 	script(type='text/javascript', src='https://unpkg.com/axios/dist/axios.min.js')
 	script(type='text/javascript').
 		// increase quantity
-		const increaseQuantity = async (productId) => {
+		const increaseQuantity = async (productId, price) => {
 			const res = await axios.get(`/cart/increaseQuantity/${productId}`)
+
+			// update quantity of this product
 			const quantityInput = document.getElementById(`quantity-${JSON.stringify(productId)}`)
 			quantityInput.value = res.data.quantity
+
+			// update total of this product
+			const total = document.getElementById(`total-${JSON.stringify(productId)}`)
+			total.innerHTML = '$' + `${price * res.data.quantity}`
+
+			// update sub total
+			const subTotal = document.getElementById('sub-total')
+			let subTotalValue = subTotal.innerHTML.split('$')[1]
+			subTotalValue = parseInt(subTotalValue) + price
+			subTotal.innerHTML = '$' + `${subTotalValue}`
 		}
 
 		// decrease quantity
-		const decreaseQuantity = async (productId) => {
+		const decreaseQuantity = async (productId, price) => {
 			const res = await axios.get(`/cart/decreaseQuantity/${productId}`)
-			const quantityInput = document.getElementById(`quantity-${JSON.stringify(productId)}`)
+
 			if (res.data.quantity === 0) {
 				const idTableRow = `table-row-${JSON.stringify(productId)}`
 				document.getElementById(idTableRow).remove()
+			} else {
+				// update quantity of this product
+				const quantityInput = document.getElementById(`quantity-${JSON.stringify(productId)}`)
+				quantityInput.value = res.data.quantity
+
+				// update total of this product
+				const total = document.getElementById(`total-${JSON.stringify(productId)}`)
+				total.innerHTML = '$' + `${price * res.data.quantity}`
 			}
-			quantityInput.value = res.data.quantity
+
+			// update sub total
+			const subTotal = document.getElementById('sub-total')
+			let subTotalValue = subTotal.innerHTML.split('$')[1]
+			subTotalValue = parseInt(subTotalValue) - price
+			subTotal.innerHTML = '$' + `${subTotalValue}`
 		}
 
 		// remove product
-		const removeProduct = productId => {
+		const removeProduct = (productId, price) => {
 			axios.delete(`/cart/${productId}`)
 			const idTableRow = `table-row-${JSON.stringify(productId)}`
 			document.getElementById(idTableRow).remove()
+
+			// update sub total
+			const subTotal = document.getElementById('sub-total')
+			let subTotalValue = subTotal.innerHTML.split('$')[1]
+			subTotalValue = parseInt(subTotalValue) - price
+			subTotal.innerHTML = '$' + `${subTotalValue}`
 		}
 	// ===============================================================================================
 	script(src='js/main.js')
