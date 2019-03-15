@@ -26,21 +26,23 @@ block content
 								th.column-5 Total
 							- var totalPrice = 0
 							each item in cart
-								tr.table-row
-								td.column-1
-									.cart-img-product.b-rad-4.o-f-hidden
-										img(src=item.product.image, alt='IMG-PRODUCT')
-								td.column-2= item.product.name
-								td.column-3 $#{item.product.price}
-								td.column-4
-									.flex-w.bo5.of-hidden.w-size17
-										button.btn-num-product-down.color1.flex-c-m.size7.bg8.eff2
-											i.fs-12.fa.fa-minus(aria-hidden='true')
-										input.size8.m-text18.t-center.num-product(type='number', name='num-product1', value=item.quantity)
-										button.btn-num-product-up.color1.flex-c-m.size7.bg8.eff2
-											i.fs-12.fa.fa-plus(aria-hidden='true')
-								td.column-5 $#{item.quantity * item.product.price}
-								- totalPrice += item.quantity * item.product.price
+								tr.table-row(id=`table-row-${JSON.stringify(item.product._id)}`)
+									td.column-1
+										button.cart-img-product.b-rad-4.o-f-hidden(onclick=`removeProduct(${JSON.stringify(item.product._id)})`)
+											img(src=item.product.image, alt='IMG-PRODUCT')
+									td.column-2= item.product.name
+									td.column-3 $#{item.product.price}
+									td.column-4
+										.flex-w.bo5.of-hidden.w-size17
+											button.btn-num-product-down.color1.flex-c-m.size7.bg8.eff2(onclick=`decreaseQuantity(${JSON.stringify(item.product._id)})`)
+												i.fs-12.fa.fa-minus(aria-hidden='true')
+											div
+											input.size8.m-text18.t-center.num-product(id=`quantity-${JSON.stringify(item.product._id)}` type='number', name='num-product1', value=item.quantity)
+											div
+											button.btn-num-product-up.color1.flex-c-m.size7.bg8.eff2(onclick=`increaseQuantity(${JSON.stringify(item.product._id)})`)
+												i.fs-12.fa.fa-plus(aria-hidden='true')
+									td.column-5 $#{item.quantity * item.product.price}
+									- totalPrice += item.quantity * item.product.price
 			.flex-w.flex-sb-m.p-t-25.p-b-25.bo8.p-l-35.p-r-60.p-lr-15-sm
 				.flex-w.flex-m.w-full-sm
 					.size11.bo4.m-r-10
@@ -78,7 +80,7 @@ block content
 								each country in countries
 									option= country.countryName
 						.size13.bo4.m-b-12
-							input.sizefull.s-text7.p-l-15.p-r-15(type='text', name='state', placeholder='State /  country')
+							input.sizefull.s-text7.p-l-15.p-r-15(type='text', name='state', placeholder='State / country')
 						.size13.bo4.m-b-22
 							input.sizefull.s-text7.p-l-15.p-r-15(type='text', name='postcode', placeholder='Postcode / Zip')
 						.size14.trans-0-4.m-b-10
@@ -113,5 +115,32 @@ block script
 		minimumResultsForSearch: 20,
 		dropdownParent: $('#dropDownSelect2')
 		});
+	// ===============================================================================================
+	script(type='text/javascript', src='https://unpkg.com/axios/dist/axios.min.js')
+	script(type='text/javascript').
+		// increase quantity
+		const increaseQuantity = async (productId) => {
+			const res = await axios.get(`/cart/increaseQuantity/${productId}`)
+			const quantityInput = document.getElementById(`quantity-${JSON.stringify(productId)}`)
+			quantityInput.value = res.data.quantity
+		}
+
+		// decrease quantity
+		const decreaseQuantity = async (productId) => {
+			const res = await axios.get(`/cart/decreaseQuantity/${productId}`)
+			const quantityInput = document.getElementById(`quantity-${JSON.stringify(productId)}`)
+			if (res.data.quantity === 0) {
+				const idTableRow = `table-row-${JSON.stringify(productId)}`
+				document.getElementById(idTableRow).remove()
+			}
+			quantityInput.value = res.data.quantity
+		}
+
+		// remove product
+		const removeProduct = productId => {
+			axios.delete(`/cart/${productId}`)
+			const idTableRow = `table-row-${JSON.stringify(productId)}`
+			document.getElementById(idTableRow).remove()
+		}
 	// ===============================================================================================
 	script(src='js/main.js')

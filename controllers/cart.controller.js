@@ -7,15 +7,18 @@ module.exports.index = async (req, res) => {
 	const data = fs.readFileSync('public/data/countries.json', 'utf8')
 	const countries = JSON.parse(data)
 
-	const cart = (await Session.findById(req.signedCookies.sessionId)).cart
-	for (item of cart) {
-		item.product = await Product.findById(item.productId)
+	let cart = {}
+	if (req.signedCookies.sessionId) {
+		cart = (await Session.findById(req.signedCookies.sessionId)).cart
+		for (item of cart) {
+			item.product = await Product.findById(item.productId)
+		}
 	}
 	
 	res.render('cart/index', { 
 		cart,
 		countries
-	 })
+	})
 }
 
 module.exports.addToCart = async (req, res) => {
@@ -46,4 +49,77 @@ module.exports.addToCart = async (req, res) => {
 	await session.save()
 
 	res.redirect('back')
+}
+
+module.exports.increaseQuantity = async (req, res) => {
+	const { sessionId } = req.signedCookies
+	if (!sessionId) {
+		res.redirect('/products')
+		return
+	}
+
+	const { productId } = req.params
+	const session = await Session.findById(sessionId)
+	
+	let quantity = 0
+	session.cart.forEach(item => {
+		if (item.productId === productId) {
+			item.quantity++
+			quantity = item.quantity
+			return
+		}
+	})
+
+	await session.save()
+
+	res.json({ quantity })
+}
+
+module.exports.decreaseQuantity = async (req, res) => {
+	const { sessionId } = req.signedCookies
+	if (!sessionId) {
+		res.redirect('/products')
+		return
+	}
+
+	const { productId } = req.params
+	const session = await Session.findById(sessionId)
+	
+	let quantity = 0
+	session.cart.forEach((item, index) => {
+		if (item.productId === productId) {
+			item.quantity--
+			quantity = item.quantity
+
+			if (quantity === 0) {
+				session.cart.splice(index, 1)
+			}
+			return
+		}
+	})
+
+	await session.save()
+	
+	res.json({ quantity })
+}
+
+module.exports.removeProduct = async (req, res) => {
+	const { sessionId } = req.signedCookies
+	if (!sessionId) {
+		res.redirect('/products')
+		return
+	}
+
+	const { productId } = req.params
+	const session = await Session.findById(sessionId)
+
+	session.cart.forEach((item, index) => {
+		if (item.productId === productId) {
+			session.cart.splice(index, 1)
+			return
+		}
+	})
+
+	await session.save()
+	res.status(200)
 }
