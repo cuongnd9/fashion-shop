@@ -51,6 +51,18 @@ module.exports.addToCart = async (req, res) => {
 	res.redirect('back')
 }
 
+module.exports.getQuantity = async (req, res) => {
+	const { sessionId } = req.signedCookies
+	if (!sessionId) {
+		res.redirect('/products')
+		return
+	}
+
+	const session = await Session.findById(sessionId)
+
+	res.json({ quantity: session.cart.length})
+}
+
 module.exports.increaseQuantity = async (req, res) => {
 	const { sessionId } = req.signedCookies
 	if (!sessionId) {

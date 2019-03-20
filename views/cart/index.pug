@@ -92,7 +92,7 @@ block content
 					span.m-text22.w-size19.w-full-sm
 						| Total:
 					span.m-text21.w-size20.w-full-sm
-						| $#{totalPrice}
+						| $#{subTotal}
 				.size15.trans-0-4
 					// Button
 					button.flex-c-m.sizefull.bg1.bo-rad-23.hov1.s-text1.trans-0-4
@@ -118,6 +118,13 @@ block script
 	// ===============================================================================================
 	script(type='text/javascript', src='https://unpkg.com/axios/dist/axios.min.js')
 	script(type='text/javascript').
+		// Get quantity products
+		const getQuantity = async () => {
+			const res = await axios.get('/cart/quantity')
+			const quantityElement = document.getElementById('quantity')
+			quantityElement.innerHTML = res.data.quantity
+		}
+
 		// increase quantity
 		const increaseQuantity = async (productId, price) => {
 			const res = await axios.get(`/cart/increaseQuantity/${productId}`)
@@ -144,6 +151,9 @@ block script
 			if (res.data.quantity === 0) {
 				const idTableRow = `table-row-${JSON.stringify(productId)}`
 				document.getElementById(idTableRow).remove()
+
+				// update total quantity
+				getQuantity()
 			} else {
 				// update quantity of this product
 				const quantityInput = document.getElementById(`quantity-${JSON.stringify(productId)}`)
@@ -163,7 +173,6 @@ block script
 
 		// remove product
 		const removeProduct = (productId, price) => {
-			axios.delete(`/cart/${productId}`)
 			const idTableRow = `table-row-${JSON.stringify(productId)}`
 			document.getElementById(idTableRow).remove()
 
@@ -172,6 +181,16 @@ block script
 			let subTotalValue = subTotal.innerHTML.split('$')[1]
 			subTotalValue = parseInt(subTotalValue) - price
 			subTotal.innerHTML = '$' + `${subTotalValue}`
+
+			// remove product
+			axios.delete(`/cart/${productId}`)
+			
+			// update total quantity
+			const quantityElement = document.getElementById('quantity')
+			const totalQuantity = parseInt(quantityElement.innerHTML) - 1
+			quantityElement.innerHTML = totalQuantity
 		}
+		
+		window.onload = getQuantity
 	// ===============================================================================================
 	script(src='js/main.js')

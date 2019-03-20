@@ -186,14 +186,25 @@ block script
 	script(type='text/javascript', src='vendor/sweetalert/sweetalert.min.js')
 	script(type='text/javascript', src='https://unpkg.com/axios/dist/axios.min.js')
 	script(type='text/javascript').
+		// Get quantity products
+		const getQuantity = async () => {
+			const res = await axios.get('/cart/quantity')
+			const quantityElement = document.getElementById('quantity')
+			quantityElement.innerHTML = res.data.quantity
+		}
+
 		// Add to cart
-		const addToCart = product => {
+		const addToCart = async (product) => {
 			const { _id: id, name } = product;
-			axios.get(`cart/add/${id}`);
+			await axios.get(`cart/add/${id}`);
+
+			// update total quantity
+			getQuantity()
 
 			swal(name, "is added to cart !", "success");
-			console.log('$$$$$',id, name)
 		};
+
+		window.onload = getQuantity
 
 		$('.block2-btn-addwishlist').each(function(){
 		var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
