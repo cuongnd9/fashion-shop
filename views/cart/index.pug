@@ -73,22 +73,22 @@ block content
 					span.s-text18.w-size19.w-full-sm
 						| Shipping:
 					.w-size20.w-full-sm
-						p.s-text8.p-b-23
+						p#shippingCost.s-text8.p-b-23
 							| There are no shipping methods available. Please double check your address, or contact us if you need any help.
 						span.s-text19
 							| Calculate Shipping
 						.rs2-select2.rs3-select2.rs4-select2.bo4.of-hidden.w-size21.m-t-8.m-b-12
-							select.selection-2(name='country')
+							select#countrySelect.selection-2(name='country')
 								option Select a country...
 								each country in countries
 									option= country.countryName
 						.size13.bo4.m-b-12
-							input.sizefull.s-text7.p-l-15.p-r-15(type='text', name='state', placeholder='State / country')
+							input#countryInput.sizefull.s-text7.p-l-15.p-r-15(type='text', name='state', placeholder='State / country')
 						.size13.bo4.m-b-22
-							input.sizefull.s-text7.p-l-15.p-r-15(type='text', name='postcode', placeholder='Postcode / Zip')
+							input#zipInput.sizefull.s-text7.p-l-15.p-r-15(type='text', name='postcode', placeholder='Postcode / Zip')
 						.size14.trans-0-4.m-b-10
 							// Button
-							button.flex-c-m.sizefull.bg1.bo-rad-23.hov1.s-text1.trans-0-4
+							button.flex-c-m.sizefull.bg1.bo-rad-23.hov1.s-text1.trans-0-4(onclick='getShippingCost()')
 								| Update Totals
 				// 
 				.flex-w.flex-sb-m.p-t-26.p-b-30
@@ -210,6 +210,23 @@ block script
 
 			document.getElementById('couponInfo').innerHTML = result
 			document.getElementById('discount').innerHTML = result
+		}
+
+		//- get shipping cost
+		const getShippingCost = () => {
+			const countrySelect = document.getElementById('countrySelect')
+			const countryInput = document.getElementById('countryInput')
+			const zipInput = document.getElementById('zipInput')
+
+			const isInputValid = countrySelect.value !== 'Select a country...' && countryInput.value && zipInput.value
+
+			// create fake shipping cost
+			const fakeCost = Math.round(Math.random() * 10)
+			const resultText = isInputValid
+				? `$${fakeCost}`
+				: 'There are no shipping methods available. Please double check your address, or contact us if you need any help.'
+
+			document.getElementById('shippingCost').innerHTML = resultText
 		}
 		
 		window.onload = getQuantity
