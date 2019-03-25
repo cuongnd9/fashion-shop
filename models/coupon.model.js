@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 const couponSchema = new Schema({
 	code: String,
-	discount: Number
+	discount: String
 })
 
 const Coupon = mongoose.model('Coupon', couponSchema, 'coupons')
