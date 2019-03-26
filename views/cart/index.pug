@@ -94,7 +94,7 @@ block content
 				.flex-w.flex-sb-m.p-t-26.p-b-30
 					span.m-text22.w-size19.w-full-sm
 						| Total:
-					span.m-text21.w-size20.w-full-sm
+					span#totalPrice.m-text21.w-size20.w-full-sm
 						| $#{subTotal}
 				.size15.trans-0-4
 					// Button
@@ -145,6 +145,8 @@ block script
 			let subTotalValue = subTotal.innerHTML.split('$')[1]
 			subTotalValue = parseInt(subTotalValue) + price
 			subTotal.innerHTML = '$' + `${subTotalValue}`
+
+			calculateTotalPrice()
 		}
 
 		// decrease quantity
@@ -172,6 +174,8 @@ block script
 			let subTotalValue = subTotal.innerHTML.split('$')[1]
 			subTotalValue = parseInt(subTotalValue) - price
 			subTotal.innerHTML = '$' + `${subTotalValue}`
+
+			calculateTotalPrice()
 		}
 
 		// remove product
@@ -192,6 +196,8 @@ block script
 			const quantityElement = document.getElementById('quantity')
 			const totalQuantity = parseInt(quantityElement.innerHTML) - 1
 			quantityElement.innerHTML = totalQuantity
+
+			calculateTotalPrice()
 		}
 
 		//- get coupon code
@@ -210,6 +216,7 @@ block script
 
 			document.getElementById('couponInfo').innerHTML = result
 			document.getElementById('discount').innerHTML = result
+			calculateTotalPrice()
 		}
 
 		//- get shipping cost
@@ -227,6 +234,37 @@ block script
 				: 'There are no shipping methods available. Please double check your address, or contact us if you need any help.'
 
 			document.getElementById('shippingCost').innerHTML = resultText
+			calculateTotalPrice()
+		}
+
+		//- calculate total price
+		const calculateTotalPrice = () => {
+			const subTotal = document.getElementById('sub-total')
+			let subTotalValue = subTotal.innerHTML.split('$')[1]
+			let totalPrice = parseInt(subTotalValue)
+
+			// discount value
+			let discountValue = document.getElementById('discount').innerHTML
+			if (/^((\$\d+)|(\d+%))$/g.test(discountValue)) {
+				if (discountValue.indexOf('%') !== -1) {
+					discountValue = discountValue.replace('%', '')
+					totalPrice = totalPrice * (100 - parseInt(discountValue)) / 100
+				}
+				if (discountValue.indexOf('$') !== -1) {
+					discountValue = discountValue.replace('$', '')
+					totalPrice -= parseInt(discountValue)		
+				}
+			}
+
+			// shipping cost
+			let shippingCostValue = document.getElementById('shippingCost').innerHTML
+			if (/^\$\d+$/.test(shippingCostValue)) {
+				shippingCostValue = shippingCostValue.replace('$', '')
+				totalPrice += parseInt(shippingCostValue)
+			}
+
+			// set total price
+			document.getElementById('totalPrice').innerHTML = '$' + totalPrice
 		}
 		
 		window.onload = getQuantity
