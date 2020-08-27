@@ -1,6 +1,6 @@
 # fashion-shop
 
-> 🕶 Fashion Shop using Nodejs.
+Fashion Shop 💌 Node - MVC
 
 ## Install
 
@@ -35,4 +35,4 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 ## License
 
-MIT © [cuongw](https://github.com/cuongw)
+MIT © [Cuong Tran](https://github.com/103cuong)
